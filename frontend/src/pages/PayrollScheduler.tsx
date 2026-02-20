@@ -79,11 +79,6 @@ export default function PayrollScheduler() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
-    // Assume employee's wallet address would be looked up by name or stored.
-    // Since we are mocking, we will just generate a random recipient for the claim test
-    // if we don't know it, or we could prompt for it.
-    // In a real flow, employeeName would map to their database record -> walletAddress.
     const mockRecipientPublicKey = generateWallet().publicKey;
 
     const result = createClaimableBalanceTransaction(
@@ -122,189 +117,142 @@ export default function PayrollScheduler() {
   };
 
   return (
-    <div
-      style={{
-        maxWidth: "900px",
-        margin: "2rem auto",
-        padding: "0 1rem",
-        display: "grid",
-        gridTemplateColumns: "repeat(auto-fit, minmax(350px, 1fr))",
-        gap: "2rem",
-      }}
-    >
-      <div>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginBottom: "1.5rem",
-          }}
-        >
-          <h1 style={{ fontWeight: "bold", fontSize: "1.5rem" }}>
-            Payroll Scheduler
-          </h1>
-          <AutosaveIndicator saving={saving} lastSaved={lastSaved} />
-        </div>
-
-        {txResult && (
-          <div style={{ marginBottom: "1.5rem" }}>
-            <Alert
-              variant={txResult.success ? "success" : "error"}
-              title={txResult.success ? "Success" : "Error"}
-              placement="inline"
-            >
-              {txResult.message}
-            </Alert>
-          </div>
-        )}
-
-        <Card>
-          <form
-            onSubmit={handleSubmit}
-            style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}
-          >
-            <Input
-              id="employeeName"
-              fieldSize="md"
-              label="Employee Name"
-              name="employeeName"
-              value={formData.employeeName}
-              onChange={handleChange}
-              placeholder="John Doe"
-            />
-
-            <Input
-              id="amount"
-              fieldSize="md"
-              label="Amount (USD)"
-              name="amount"
-              value={formData.amount}
-              onChange={handleChange}
-              placeholder="5000"
-            />
-
-            <Select
-              id="frequency"
-              fieldSize="md"
-              label="Frequency"
-              value={formData.frequency}
-              onChange={(e) => handleSelectChange("frequency", e.target.value)}
-            >
-              <option value="weekly">Weekly</option>
-              <option value="monthly">Monthly</option>
-            </Select>
-
-            <Input
-              id="startDate"
-              fieldSize="md"
-              label="Start Date (YYYY-MM-DD)"
-              name="startDate"
-              value={formData.startDate}
-              onChange={handleChange}
-              placeholder="2024-01-01"
-            />
-
-            <Button id="tour-init-payroll" type="submit" variant="primary" size="md">
-              Schedule Payroll
-            </Button>
-          </form>
-        </Card>
+    <div className="w-full max-w-4xl mx-auto">
+      {/* Page title row */}
+      <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
+        <h1 className="text-2xl sm:text-3xl font-black tracking-tight">
+          Payroll <span className="text-[var(--accent)]">Scheduler</span>
+        </h1>
+        <AutosaveIndicator saving={saving} lastSaved={lastSaved} />
       </div>
 
-      <div>
-        <h2
-          style={{
-            fontWeight: "bold",
-            fontSize: "1.25rem",
-            marginBottom: "1.5rem",
-          }}
-        >
-          Pending Claims
-        </h2>
-        <Card>
-          {pendingClaims.length === 0 ? (
-            <p style={{ color: "var(--color-gray-500)", margin: 0 }}>
-              No pending claimable balances.
-            </p>
-          ) : (
-            <ul
-              style={{
-                listStyle: "none",
-                padding: 0,
-                margin: 0,
-                display: "flex",
-                flexDirection: "column",
-                gap: "1rem",
-              }}
+      {txResult && (
+        <div className="mb-6">
+          <Alert
+            variant={txResult.success ? "success" : "error"}
+            title={txResult.success ? "Success" : "Error"}
+            placement="inline"
+          >
+            {txResult.message}
+          </Alert>
+        </div>
+      )}
+
+      {/* Two-column grid: stacks to 1 column on mobile */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* ── Schedule Form ── */}
+        <div>
+          <h2 className="text-sm font-bold uppercase tracking-widest text-[var(--muted)] font-mono mb-4">
+            New Schedule
+          </h2>
+          <Card>
+            <form
+              onSubmit={handleSubmit}
+              style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}
             >
-              {pendingClaims.map((claim) => (
-                <li
-                  key={claim.id}
-                  style={{
-                    border: "1px solid var(--color-gray-300)",
-                    padding: "1rem",
-                    borderRadius: "8px",
-                  }}
-                >
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "flex-start",
-                      marginBottom: "0.5rem",
-                    }}
+              <Input
+                id="employeeName"
+                fieldSize="md"
+                label="Employee Name"
+                name="employeeName"
+                value={formData.employeeName}
+                onChange={handleChange}
+                placeholder="John Doe"
+              />
+
+              <Input
+                id="amount"
+                fieldSize="md"
+                label="Amount (USD)"
+                name="amount"
+                value={formData.amount}
+                onChange={handleChange}
+                placeholder="5000"
+              />
+
+              <Select
+                id="frequency"
+                fieldSize="md"
+                label="Frequency"
+                value={formData.frequency}
+                onChange={(e) => handleSelectChange("frequency", e.target.value)}
+              >
+                <option value="weekly">Weekly</option>
+                <option value="monthly">Monthly</option>
+              </Select>
+
+              <Input
+                id="startDate"
+                fieldSize="md"
+                label="Start Date (YYYY-MM-DD)"
+                name="startDate"
+                value={formData.startDate}
+                onChange={handleChange}
+                placeholder="2024-01-01"
+              />
+
+              <Button id="tour-init-payroll" type="submit" variant="primary" size="md">
+                Schedule Payroll
+              </Button>
+            </form>
+          </Card>
+        </div>
+
+        {/* ── Pending Claims ── */}
+        <div>
+          <h2 className="text-sm font-bold uppercase tracking-widest text-[var(--muted)] font-mono mb-4">
+            Pending Claims
+          </h2>
+          <Card>
+            {pendingClaims.length === 0 ? (
+              <p className="text-[var(--muted)] text-sm text-center py-4">
+                No pending claimable balances.
+              </p>
+            ) : (
+              <ul className="flex flex-col gap-3 p-0 m-0 list-none">
+                {pendingClaims.map((claim) => (
+                  <li
+                    key={claim.id}
+                    className="border border-[var(--border-hi)] rounded-xl p-4 hover:border-[var(--accent)]/30 transition"
                   >
-                    <h3 style={{ fontWeight: "500", margin: 0 }}>
-                      {claim.employeeName}
-                    </h3>
-                    <span
-                      style={{
-                        display: "inline-flex",
-                        alignItems: "center",
-                        padding: "0.125rem 0.625rem",
-                        borderRadius: "9999px",
-                        fontSize: "0.75rem",
-                        fontWeight: "500",
-                        backgroundColor: "var(--color-yellow-100)",
-                        color: "var(--color-yellow-800)",
-                      }}
-                    >
-                      {claim.status}
-                    </span>
-                  </div>
-                  <div
-                    style={{
-                      fontSize: "0.875rem",
-                      color: "var(--color-gray-600)",
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: "0.25rem",
-                    }}
-                  >
-                    <p style={{ margin: 0 }}>
-                      Amount: {claim.amount} USDC
-                    </p>
-                    <p style={{ margin: 0 }}>
-                      Scheduled: {claim.dateScheduled}
-                    </p>
-                    <p
-                      style={{
-                        margin: 0,
-                        whiteSpace: "nowrap",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                      }}
-                      title={claim.claimantPublicKey}
-                    >
-                      To: {claim.claimantPublicKey}
-                    </p>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          )}
-        </Card>
+                    {/* Claim header */}
+                    <div className="flex items-start justify-between gap-2 mb-3">
+                      <h3 className="font-semibold text-sm text-[var(--text)]">
+                        {claim.employeeName}
+                      </h3>
+                      <span className="flex-shrink-0 inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-yellow-900/30 text-yellow-400 border border-yellow-700/30">
+                        {claim.status}
+                      </span>
+                    </div>
+
+                    {/* Claim details */}
+                    <div className="flex flex-col gap-1 text-xs text-[var(--muted)]">
+                      <div className="flex items-center justify-between">
+                        <span>Amount</span>
+                        <span className="font-mono text-[var(--text)] font-semibold">
+                          {claim.amount} USDC
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span>Scheduled</span>
+                        <span className="font-mono">{claim.dateScheduled}</span>
+                      </div>
+                      <div className="flex items-center justify-between gap-2 mt-1 pt-1 border-t border-[var(--border)]">
+                        <span className="flex-shrink-0">To</span>
+                        <span
+                          className="font-mono text-[10px] truncate"
+                          title={claim.claimantPublicKey}
+                        >
+                          {claim.claimantPublicKey.slice(0, 8)}…{claim.claimantPublicKey.slice(-6)}
+                        </span>
+                      </div>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </Card>
+        </div>
       </div>
     </div>
   );
