@@ -1,16 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { Icon } from "@stellar/design-system";
+import { Icon, Button, Card, Input, Select, Alert } from "@stellar/design-system";
 import { EmployeeList } from "../components/EmployeeList";
 import { AutosaveIndicator } from "../components/AutosaveIndicator";
 import { useAutosave } from "../hooks/useAutosave";
 import { generateWallet } from "../services/stellar";
-import {
-  Button,
-  Card,
-  Input,
-  Select,
-  Alert,
-} from "@stellar/design-system";
+import { useTranslation } from "react-i18next";
 
 interface EmployeeFormState {
   fullName: string;
@@ -19,12 +13,61 @@ interface EmployeeFormState {
   currency: string;
 }
 
+interface EmployeeItem {
+  id: string;
+  name: string;
+  email: string;
+  imageUrl?: string;
+  position: string;
+  wallet?: string;
+  status?: "Active" | "Inactive";
+}
+
 const initialFormState: EmployeeFormState = {
   fullName: "",
   walletAddress: "",
   role: "contractor",
   currency: "USDC",
 };
+
+const mockEmployees: EmployeeItem[] = [
+  {
+    id: "1",
+    name: "Wilfred G.",
+    email: "wilfred@example.com",
+    imageUrl: "",
+    position: "Lead Developer",
+    wallet: "GDUKMGUGKAAZBAMNSMUA4Y6G4XDSZPSZ3SW5UN3ARVMO6QSRDWP5YLEXT2U2D6",
+    status: "Active",
+  },
+  {
+    id: "2",
+    name: "Chinelo A.",
+    email: "chinelo@example.com",
+    imageUrl: "",
+    position: "Product Manager",
+    wallet: "GDUKMGUGKAAZBAMNSMUA4Y6G4XDSZPSZ3SW5UN3ARVMO6QSRDWP5YLEXT2U2D6",
+    status: "Active",
+  },
+  {
+    id: "3",
+    name: "Emeka N.",
+    email: "emeka@example.com",
+    imageUrl: "https://i.pravatar.cc/150?img=3",
+    position: "UX Designer",
+    wallet: "GDUKMGUGKAAZBAMNSMUA4Y6G4XDSZPSZ3SW5UN3ARVMO6QSRDWP5YLEXT2U2D6",
+    status: "Active",
+  },
+  {
+    id: "4",
+    name: "Fatima K.",
+    email: "fatima@example.com",
+    imageUrl: "",
+    position: "HR Specialist",
+    wallet: "GDUKMGUGKAAZBAMNSMUA4Y6G4XDSZPSZ3SW5UN3ARVMO6QSRDWP5YLEXT2U2D6",
+    status: "Active",
+  },
+];
 
 export default function EmployeeEntry() {
   const [isAdding, setIsAdding] = useState(false);
@@ -38,6 +81,7 @@ export default function EmployeeEntry() {
     "employee-entry-draft",
     formData
   );
+  const { t } = useTranslation();
 
   useEffect(() => {
     const saved = loadSavedData();
@@ -45,45 +89,6 @@ export default function EmployeeEntry() {
       setFormData(saved);
     }
   }, [loadSavedData]);
-
-  const mockEmployees = [
-    {
-      id: "1",
-      name: "Wilfred G.",
-      email: "wilfred@example.com",
-      imageUrl: "",
-      position: "Lead Developer",
-      wallet: "GDUKMGUGKAAZBAMNSMUA4Y6G4XDSZPSZ3SW5UN3ARVMO6QSRDWP5YLEXT2U2D6",
-      status: "Active" as "Active",
-    },
-    {
-      id: "2",
-      name: "Chinelo A.",
-      email: "chinelo@example.com",
-      imageUrl: "",
-      position: "Product Manager",
-      wallet: "GDUKMGUGKAAZBAMNSMUA4Y6G4XDSZPSZ3SW5UN3ARVMO6QSRDWP5YLEXT2U2D6",
-      status: "Active" as "Active",
-    },
-    {
-      id: "3",
-      name: "Emeka N.",
-      email: "emeka@example.com",
-      imageUrl: "https://i.pravatar.cc/150?img=3",
-      position: "UX Designer",
-      wallet: "GDUKMGUGKAAZBAMNSMUA4Y6G4XDSZPSZ3SW5UN3ARVMO6QSRDWP5YLEXT2U2D6",
-      status: "Active" as "Active",
-    },
-    {
-      id: "4",
-      name: "Fatima K.",
-      email: "fatima@example.com",
-      imageUrl: "",
-      position: "HR Specialist",
-      wallet: "GDUKMGUGKAAZBAMNSMUA4Y6G4XDSZPSZ3SW5UN3ARVMO6QSRDWP5YLEXT2U2D6",
-      status: "Active" as "Active",
-    }
-  ];
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -154,7 +159,7 @@ export default function EmployeeEntry() {
                 A default Stellar wallet has been created for you to receive claimable balances.<br />
                 <b className="block mt-2 text-yellow-200">Your Secret Key:</b>{" "}
                 <code className="break-all text-xs font-mono">{notification.secretKey}</code><br />
-                <i className="block mt-2 text-yellow-400/80">Please save this secret key securely.</i>
+                <i className="block mt-2 text-yellow-400/80">Please save this secret key securely to claim your future salary.</i>
               </div>
             )}
           </div>
@@ -162,19 +167,51 @@ export default function EmployeeEntry() {
 
         <Card>
           <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
-            <Input id="fullName" fieldSize="md" label="Full Name" name="fullName" value={formData.fullName} onChange={handleChange} placeholder="Jane Smith" required />
-            <Input id="walletAddress" fieldSize="md" label="Stellar Wallet Address (Optional)" note="If no wallet is provided, a claimable balance will be created using a new wallet generated for them." name="walletAddress" value={formData.walletAddress} onChange={handleChange} placeholder="Leave blank to generate a wallet" />
-            <Select id="role" fieldSize="md" label="Role" value={formData.role} onChange={(e) => handleSelectChange("role", e.target.value)}>
+            <Input
+              id="fullName"
+              fieldSize="md"
+              label="Full Name"
+              name="fullName"
+              value={formData.fullName}
+              onChange={handleChange}
+              placeholder="Jane Smith"
+              required
+            />
+            <Input
+              id="walletAddress"
+              fieldSize="md"
+              label="Stellar Wallet Address (Optional)"
+              note="If no wallet is provided, a claimable balance will be created using a new wallet generated for them."
+              name="walletAddress"
+              value={formData.walletAddress}
+              onChange={handleChange}
+              placeholder="Leave blank to generate a wallet"
+            />
+            <Select
+              id="role"
+              fieldSize="md"
+              label="Role"
+              value={formData.role}
+              onChange={(e) => handleSelectChange("role", e.target.value)}
+            >
               <option value="contractor">Contractor</option>
               <option value="full-time">Full Time</option>
               <option value="part-time">Part Time</option>
             </Select>
-            <Select id="currency" fieldSize="md" label="Preferred Currency" value={formData.currency} onChange={(e) => handleSelectChange("currency", e.target.value)}>
+            <Select
+              id="currency"
+              fieldSize="md"
+              label="Preferred Currency"
+              value={formData.currency}
+              onChange={(e) => handleSelectChange("currency", e.target.value)}
+            >
               <option value="USDC">USDC</option>
               <option value="XLM">XLM</option>
               <option value="EURC">EURC</option>
             </Select>
-            <Button type="submit" variant="primary" size="md">Add Employee</Button>
+            <Button type="submit" variant="primary" size="md">
+              Add Employee
+            </Button>
           </form>
         </Card>
       </div>
@@ -188,10 +225,11 @@ export default function EmployeeEntry() {
       <div className="w-full mb-6 sm:mb-10 flex flex-wrap items-end justify-between gap-4 border-b border-[var(--border-hi)] pb-6">
         <div>
           <h1 className="text-3xl sm:text-4xl font-black mb-1 tracking-tight">
-            Workforce <span className="text-[var(--accent)]">Directory</span>
+            {t("employees.title", { highlight: "" }).replace("{{highlight}}", "")}
+            <span className="text-[var(--accent)]"> {t("employees.titleHighlight")}</span>
           </h1>
           <p className="text-[var(--muted)] font-mono text-xs tracking-wider uppercase">
-            Employee roster and compliance
+            {t("employees.subtitle")}
           </p>
         </div>
         <button
@@ -200,13 +238,13 @@ export default function EmployeeEntry() {
           className="touch-target px-5 py-2.5 bg-[var(--accent)] text-bg font-bold rounded-lg hover:bg-[var(--accent)]/90 transition-all flex items-center gap-2 text-sm shadow-lg shadow-[var(--accent)]/10"
         >
           <Icon.Plus size="sm" />
-          Add Employee
+          {t("employees.addEmployee")}
         </button>
       </div>
 
       <EmployeeList
         employees={mockEmployees}
-        onEmployeeClick={(employee) => alert(`Clicked: ${employee.name}`)}
+        onEmployeeClick={(employee) => console.log("Clicked:", employee.name)}
       />
     </div>
   );

@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { NavLink, useLocation } from "react-router-dom";
-import { Code, User, Wallet, X, Menu } from "lucide-react";
+import { Code, User, Wallet, FileText, X, Menu } from "lucide-react";
 import { Avatar } from "./Avatar";
 import ConnectAccount from "./ConnectAccount";
 
@@ -37,16 +37,14 @@ const NavItem: React.FC<NavItemProps> = ({ to, icon, label, isDebug, onClick }) 
         onClick={onClick}
         className={({ isActive }) =>
             isDebug
-                ? `flex items-center gap-2 px-3 py-2.5 rounded-lg text-[11px] font-mono tracking-wide border transition touch-target ${
-                      isActive
-                          ? "text-[var(--accent2)] bg-[rgba(124,111,247,0.10)] border-[rgba(124,111,247,0.35)]"
-                          : "text-[var(--accent2)] bg-[rgba(124,111,247,0.06)] border-[rgba(124,111,247,0.20)] hover:bg-[rgba(124,111,247,0.12)] hover:border-[rgba(124,111,247,0.35)]"
-                  }`
-                : `flex items-center gap-2 px-3 py-2.5 rounded-lg text-[13px] font-semibold transition touch-target ${
-                      isActive
-                          ? "text-[var(--accent)] bg-white/5"
-                          : "text-[var(--muted)] hover:bg-white/10 hover:text-white"
-                  }`
+                ? `flex items-center gap-2 px-3 py-2.5 rounded-lg text-[11px] font-mono tracking-wide border transition touch-target ${isActive
+                    ? "text-[var(--accent2)] bg-[rgba(124,111,247,0.10)] border-[rgba(124,111,247,0.35)]"
+                    : "text-[var(--accent2)] bg-[rgba(124,111,247,0.06)] border-[rgba(124,111,247,0.20)] hover:bg-[rgba(124,111,247,0.12)] hover:border-[rgba(124,111,247,0.35)]"
+                }`
+                : `flex items-center gap-2 px-3 py-2.5 rounded-lg text-[13px] font-semibold transition touch-target ${isActive
+                    ? "text-[var(--accent)] bg-white/5"
+                    : "text-[var(--muted)] hover:bg-white/10 hover:text-white"
+                }`
         }
     >
         <span className="opacity-70 flex-shrink-0">{icon}</span>
@@ -66,6 +64,7 @@ const DesktopNav: React.FC = () => {
         <nav className="hidden md:flex items-center gap-2" aria-label="Main navigation">
             <NavItem to="/payroll" icon={<Wallet className="w-4 h-4" />} label="Payroll" />
             <NavItem to="/employee" icon={<User className="w-4 h-4" />} label="Employees" />
+            <NavItem to="/reports" icon={<FileText className="w-4 h-4" />} label="Reports" />
 
             <div className="w-px h-5 bg-[var(--border-hi)] mx-1" />
 
@@ -122,9 +121,8 @@ const MobileNav: React.FC<MobileNavProps> = ({ isOpen, onClose }) => {
         <>
             {/* Backdrop */}
             <div
-                className={`md:hidden fixed inset-0 z-40 bg-black/60 backdrop-blur-sm transition-opacity duration-300 ${
-                    isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
-                }`}
+                className={`md:hidden fixed inset-0 z-40 bg-black/60 backdrop-blur-sm transition-opacity duration-300 ${isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+                    }`}
                 onClick={onClose}
                 aria-hidden="true"
             />
@@ -169,6 +167,12 @@ const MobileNav: React.FC<MobileNavProps> = ({ isOpen, onClose }) => {
                         to="/employee"
                         icon={<User className="w-4 h-4" />}
                         label="Employees"
+                        onClick={onClose}
+                    />
+                    <NavItem
+                        to="/reports"
+                        icon={<FileText className="w-4 h-4" />}
+                        label="Reports"
                         onClick={onClose}
                     />
 

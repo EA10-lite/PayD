@@ -1,8 +1,10 @@
 import { Icon } from "@stellar/design-system";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 export default function Home() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[80vh] text-center px-4 sm:px-6 py-12">
@@ -14,15 +16,17 @@ export default function Home() {
 
       {/* Hero headline — scales down on mobile */}
       <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black mb-5 sm:mb-6 tracking-tighter leading-tight sm:leading-none">
-        Automate your <span className="text-[var(--accent)]">Payroll</span>
+        {t("home.titleLine1Prefix")}{" "}
+        <span className="text-[var(--accent)]">{t("home.titleLine1Highlight")}</span>
         <br className="hidden sm:block" />
-        {" "}on the <span className="text-[var(--accent2)]">Stellar</span> Network.
+        {" "}{t("home.titleLine2Prefix")}{" "}
+        <span className="text-[var(--accent2)]">{t("home.titleLine2Highlight")}</span>
+        {t("home.titleLine2Suffix")}
       </h1>
 
       {/* Sub-headline */}
       <p className="text-base sm:text-xl text-[var(--muted)] max-w-2xl mb-10 sm:mb-12 leading-relaxed font-medium">
-        PayD is the next-gen dashboard for real-time employee payments.
-        Secure, transparent, and ultra-fast.
+        {t("home.tagline")}
       </p>
 
       {/* CTA buttons — stack on mobile, side-by-side on sm+ */}
@@ -33,7 +37,7 @@ export default function Home() {
             void navigate("/payroll");
           }}
         >
-          Manage Payroll
+          {t("home.ctaManagePayroll")}
         </button>
         <button
           className="touch-target w-full sm:w-auto px-8 py-4 glass border-[var(--border-hi)] text-[var(--text)] font-bold rounded-xl hover:bg-white/5 transition-all outline-none text-sm sm:text-base"
@@ -41,7 +45,7 @@ export default function Home() {
             void navigate("/employee");
           }}
         >
-          View Employees
+          {t("home.ctaViewEmployees")}
         </button>
       </div>
 
@@ -51,30 +55,24 @@ export default function Home() {
           <div className="w-11 h-11 rounded-lg bg-[var(--accent)]/10 flex items-center justify-center mb-5 border border-[var(--accent)]/20">
             <Icon.CreditCard01 size="lg" className="text-[var(--accent)]" />
           </div>
-          <h3 className="text-lg sm:text-xl font-bold mb-2">Instant Settlement</h3>
-          <p className="text-[var(--muted)] text-sm leading-relaxed">
-            No more waiting for banks. Pay your staff in seconds with sub-cent fees.
-          </p>
+          <h3 className="text-lg sm:text-xl font-bold mb-2">{t("home.card1Title")}</h3>
+          <p className="text-[var(--muted)] text-sm leading-relaxed">{t("home.card1Body")}</p>
         </div>
 
         <div className="card glass noise">
           <div className="w-11 h-11 rounded-lg bg-[var(--accent2)]/10 flex items-center justify-center mb-5 border border-[var(--accent2)]/20">
             <Icon.Users01 size="lg" className="text-[var(--accent2)]" />
           </div>
-          <h3 className="text-lg sm:text-xl font-bold mb-2">Global Workforce</h3>
-          <p className="text-[var(--muted)] text-sm leading-relaxed">
-            Onboard anyone, anywhere. Pay in USDC, XLM, or local stablecoins.
-          </p>
+          <h3 className="text-lg sm:text-xl font-bold mb-2">{t("home.card2Title")}</h3>
+          <p className="text-[var(--muted)] text-sm leading-relaxed">{t("home.card2Body")}</p>
         </div>
 
         <div className="card glass noise">
           <div className="w-11 h-11 rounded-lg bg-[var(--danger)]/10 flex items-center justify-center mb-5 border border-[var(--danger)]/20">
             <Icon.ShieldTick size="lg" className="text-[var(--danger)]" />
           </div>
-          <h3 className="text-lg sm:text-xl font-bold mb-2">On-Chain Audit</h3>
-          <p className="text-[var(--muted)] text-sm leading-relaxed">
-            Full transparency. Every transaction is immutable and verifiable on-ledger.
-          </p>
+          <h3 className="text-lg sm:text-xl font-bold mb-2">{t("home.card3Title")}</h3>
+          <p className="text-[var(--muted)] text-sm leading-relaxed">{t("home.card3Body")}</p>
         </div>
       </div>
     </div>

@@ -22,7 +22,7 @@ const AppLayout: React.FC = () => {
                         P
                     </div>
                     <span className="text-lg font-extrabold tracking-tight">
-                        Pay<span className="text-[var(--accent)]">D</span>
+                        Pay<span className="text-(--accent)">D</span>
                     </span>
                     <span className="text-[9px] font-normal font-mono text-[var(--muted)] tracking-widest uppercase border border-[var(--border-hi)] px-1.5 py-0.5 rounded ml-0.5 hidden sm:inline">
                         BETA
@@ -58,13 +58,13 @@ const AppLayout: React.FC = () => {
                         href="http://www.apache.org/licenses/LICENSE-2.0"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-[var(--accent)] hover:underline"
+                        className="text-(--accent) hover:underline"
                     >
                         Apache License 2.0
                     </a>
                 </span>
                 <div className="flex items-center gap-1.5">
-                    <div className="w-1.5 h-1.5 rounded-full bg-[var(--accent)] shadow-[0_0_6px_var(--accent)]" />
+                    <div className="w-1.5 h-1.5 rounded-full bg-(--accent) shadow-[0_0_6px_var(--accent)]" />
                     STELLAR NETWORK · MAINNET
                 </div>
             </footer>
