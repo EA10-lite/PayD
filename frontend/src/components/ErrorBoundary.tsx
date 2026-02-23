@@ -1,5 +1,5 @@
-import React from "react";
-import * as Sentry from "@sentry/react";
+import React from 'react';
+import * as Sentry from '@sentry/react';
 
 type ErrorBoundaryProps = {
   fallback: React.ReactNode;
@@ -10,10 +10,7 @@ type ErrorBoundaryState = {
   hasError: boolean;
 };
 
-export default class ErrorBoundary extends React.Component<
-  ErrorBoundaryProps,
-  ErrorBoundaryState
-> {
+export default class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
   state: ErrorBoundaryState = {
     hasError: false,
   };

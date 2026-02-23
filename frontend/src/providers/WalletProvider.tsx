@@ -1,18 +1,16 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef } from 'react';
 import {
   StellarWalletsKit,
   WalletNetwork,
   FreighterModule,
   xBullModule,
   LobstrModule,
-} from "@creit.tech/stellar-wallets-kit";
-import { useTranslation } from "react-i18next";
-import { useNotification } from "../hooks/useNotification";
-import { WalletContext } from "../hooks/useWallet";
+} from '@creit.tech/stellar-wallets-kit';
+import { useTranslation } from 'react-i18next';
+import { useNotification } from '../hooks/useNotification';
+import { WalletContext } from '../hooks/useWallet';
 
-export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
+export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [address, setAddress] = useState<string | null>(null);
   const [walletName, setWalletName] = useState<string | null>(null);
   const [isConnecting, setIsConnecting] = useState(false);
@@ -35,15 +33,15 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
     setIsConnecting(true);
     try {
       await kit.openModal({
-        modalTitle: t("wallet.modalTitle"),
+        modalTitle: t('wallet.modalTitle'),
         onWalletSelected: (option) => {
           void (async () => {
             const { address } = await kit.getAddress();
             setAddress(address);
             setWalletName(option.id);
             notifySuccess(
-              "Wallet connected",
-              `${address.slice(0, 6)}...${address.slice(-4)} via ${option.id}`,
+              'Wallet connected',
+              `${address.slice(0, 6)}...${address.slice(-4)} via ${option.id}`
             );
           })();
         },
@@ -52,10 +50,10 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
         },
       });
     } catch (error) {
-      console.error("Failed to connect wallet:", error);
+      console.error('Failed to connect wallet:', error);
       notifyError(
-        "Wallet connection failed",
-        error instanceof Error ? error.message : "Please try again.",
+        'Wallet connection failed',
+        error instanceof Error ? error.message : 'Please try again.'
       );
     }
   };
@@ -63,12 +61,12 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
   const disconnect = () => {
     setAddress(null);
     setWalletName(null);
-    notify("Wallet disconnected");
+    notify('Wallet disconnected');
   };
 
   const signTransaction = async (xdr: string) => {
     const kit = kitRef.current;
-    if (!kit) throw new Error("Wallet kit not initialized");
+    if (!kit) throw new Error('Wallet kit not initialized');
     const result = await kit.signTransaction(xdr);
     return result.signedTxXdr;
   };

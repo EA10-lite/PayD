@@ -1,8 +1,8 @@
-import React from "react";
-import { Outlet, NavLink, useLocation } from "react-router-dom";
-import ConnectAccount from "../components/ConnectAccount";
-import AppNav from "./AppNav";
-import ThemeToggle from "./ThemeToggle";
+import React from 'react';
+import { Outlet, NavLink, useLocation } from 'react-router-dom';
+import ConnectAccount from '../components/ConnectAccount';
+import AppNav from './AppNav';
+import ThemeToggle from './ThemeToggle';
 
 // ── Page Wrapper ───────────────────────
 const PageWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => (
@@ -16,14 +16,14 @@ const AppLayout: React.FC = () => {
   return (
     <div
       className="flex flex-col min-h-screen"
-      style={{ background: "var(--bg)", color: "var(--text)" }}
+      style={{ background: 'var(--bg)', color: 'var(--text)' }}
     >
       {/* Header */}
       <header
         className="fixed top-0 left-0 right-0 z-50 h-(--header-h) items-center px-16 flex justify-between backdrop-blur-[20px] backdrop-saturate-180 border-b"
         style={{
-          background: "color-mix(in srgb, var(--bg) 85%, transparent)",
-          borderColor: "var(--border-hi)",
+          background: 'color-mix(in srgb, var(--bg) 85%, transparent)',
+          borderColor: 'var(--border-hi)',
         }}
       >
         {/* Logo */}
@@ -52,10 +52,7 @@ const AppLayout: React.FC = () => {
       {/* Main */}
       <main className="flex flex-col flex-1 pt-(--header-h)">
         <PageWrapper>
-          <div
-            key={location.pathname}
-            className="flex flex-col flex-1 px-6 py-8"
-          >
+          <div key={location.pathname} className="flex flex-col flex-1 px-6 py-8">
             <Outlet />
           </div>
         </PageWrapper>
@@ -64,10 +61,10 @@ const AppLayout: React.FC = () => {
       {/* Footer */}
       <footer
         className="flex flex-wrap justify-between items-center gap-2 px-6 py-5 border-t text-xs font-mono text-(--muted)"
-        style={{ borderColor: "var(--border-hi)" }}
+        style={{ borderColor: 'var(--border-hi)' }}
       >
         <span>
-          © {new Date().getFullYear()} PayD — Licensed under the{" "}
+          © {new Date().getFullYear()} PayD — Licensed under the{' '}
           <a
             href="http://www.apache.org/licenses/LICENSE-2.0"
             target="_blank"

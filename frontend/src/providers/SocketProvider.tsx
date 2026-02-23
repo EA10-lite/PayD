@@ -1,15 +1,12 @@
-import React, { useEffect, useState } from "react";
-import { io, Socket } from "socket.io-client";
-import { useNotification } from "../hooks/useNotification";
-import { SocketContext } from "../hooks/useSocket";
+import React, { useEffect, useState } from 'react';
+import { io, Socket } from 'socket.io-client';
+import { useNotification } from '../hooks/useNotification';
+import { SocketContext } from '../hooks/useSocket';
 
 // Assuming backend is running on port 3000
-const SOCKET_URL =
-  (import.meta.env.VITE_API_URL as string) || "http://localhost:3000";
+const SOCKET_URL = (import.meta.env.VITE_API_URL as string) || 'http://localhost:3000';
 
-export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
+export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [socket, setSocket] = useState<Socket | null>(null);
   const [connected, setConnected] = useState(false);
   const { notifySuccess, notifyError } = useNotification();
@@ -17,26 +14,26 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({
   useEffect(() => {
     const newSocket = io(SOCKET_URL, {
       withCredentials: true,
-      transports: ["websocket", "polling"], // Allow fallback to polling
+      transports: ['websocket', 'polling'], // Allow fallback to polling
       reconnectionAttempts: 5,
     });
 
     setSocket(newSocket);
 
-    newSocket.on("connect", () => {
-      console.log("Socket connected:", newSocket.id);
+    newSocket.on('connect', () => {
+      console.log('Socket connected:', newSocket.id);
       setConnected(true);
-      notifySuccess("Real-time updates connected");
+      notifySuccess('Real-time updates connected');
     });
 
-    newSocket.on("disconnect", () => {
-      console.log("Socket disconnected");
+    newSocket.on('disconnect', () => {
+      console.log('Socket disconnected');
       setConnected(false);
-      notifyError("Real-time updates disconnected");
+      notifyError('Real-time updates disconnected');
     });
 
-    newSocket.on("connect_error", (err) => {
-      console.error("Socket connection error:", err);
+    newSocket.on('connect_error', (err) => {
+      console.error('Socket connection error:', err);
       setConnected(false);
     });
 
@@ -47,13 +44,13 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const subscribeToTransaction = (transactionId: string) => {
     if (socket && connected) {
-      socket.emit("subscribe:transaction", transactionId);
+      socket.emit('subscribe:transaction', transactionId);
     }
   };
 
   const unsubscribeFromTransaction = (transactionId: string) => {
     if (socket && connected) {
-      socket.emit("unsubscribe:transaction", transactionId);
+      socket.emit('unsubscribe:transaction', transactionId);
     }
   };
 
