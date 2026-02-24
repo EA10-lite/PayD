@@ -126,7 +126,6 @@ const AppNav: React.FC = () => {
       </NavLink>
 
       <div className="w-px h-5 bg-(--border-hi) mx-2" />
-
       <NavLink
         to="/debug"
         className={({ isActive }) =>
