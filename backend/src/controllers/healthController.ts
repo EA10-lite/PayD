@@ -62,7 +62,7 @@ export class HealthController {
         // 3. Stellar Horizon Check
         try {
             const server = StellarService.getServer();
-            await server.root();
+            await server.feeStats();
             statusReport.dependencies.horizon.status = 'connected';
         } catch (error: any) {
             isHealthy = false;

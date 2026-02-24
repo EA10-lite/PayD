@@ -16,7 +16,7 @@ export const HamburgerButton: React.FC<HamburgerProps> = ({ isOpen, onToggle }) 
         aria-expanded={isOpen}
         aria-controls="mobile-nav"
         onClick={onToggle}
-        className="md:hidden flex items-center justify-center w-10 h-10 rounded-lg glass border border-[var(--border-hi)] text-[var(--muted)] hover:text-white hover:border-[var(--accent)]/40 transition-all touch-target"
+        className="md:hidden flex items-center justify-center w-10 h-10 rounded-lg glass border border-[var(--border-hi)] text-(--muted) hover:text-white hover:border-(--accent)/40 transition-all touch-target"
     >
         {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
     </button>
@@ -38,12 +38,12 @@ const NavItem: React.FC<NavItemProps> = ({ to, icon, label, isDebug, onClick }) 
         className={({ isActive }) =>
             isDebug
                 ? `flex items-center gap-2 px-3 py-2.5 rounded-lg text-[11px] font-mono tracking-wide border transition touch-target ${isActive
-                    ? "text-[var(--accent2)] bg-[rgba(124,111,247,0.10)] border-[rgba(124,111,247,0.35)]"
-                    : "text-[var(--accent2)] bg-[rgba(124,111,247,0.06)] border-[rgba(124,111,247,0.20)] hover:bg-[rgba(124,111,247,0.12)] hover:border-[rgba(124,111,247,0.35)]"
+                    ? "text-(--accent2) bg-[rgba(124,111,247,0.10)] border-[rgba(124,111,247,0.35)]"
+                    : "text-(--accent2) bg-[rgba(124,111,247,0.06)] border-[rgba(124,111,247,0.20)] hover:bg-[rgba(124,111,247,0.12)] hover:border-[rgba(124,111,247,0.35)]"
                 }`
                 : `flex items-center gap-2 px-3 py-2.5 rounded-lg text-[13px] font-semibold transition touch-target ${isActive
-                    ? "text-[var(--accent)] bg-white/5"
-                    : "text-[var(--muted)] hover:bg-white/10 hover:text-white"
+                    ? "text-(--accent) bg-white/5"
+                    : "text-(--muted) hover:bg-white/10 hover:text-white"
                 }`
         }
     >
@@ -74,7 +74,7 @@ const DesktopNav: React.FC = () => {
                 label="Cross-Asset"
             />
 
-            <div className="w-px h-5 bg-[var(--border-hi)] mx-1" />
+            <div className="w-px h-5 bg-(--border-hi) mx-1" />
 
             <NavItem
                 to="/debug"
@@ -94,7 +94,7 @@ const DesktopNav: React.FC = () => {
                 <ConnectAccount />
             </div>
 
-            <div className="ml-1 pl-2 border-l border-[var(--border-hi)] hidden lg:flex items-center gap-2">
+            <div className="ml-1 pl-2 border-l border-(--border-hi) hidden lg:flex items-center gap-2">
                 <Avatar
                     email={currentUser.email}
                     name={currentUser.name}
@@ -102,10 +102,10 @@ const DesktopNav: React.FC = () => {
                     size="sm"
                 />
                 <div className="flex-1 min-w-0 hidden xl:block">
-                    <p className="text-xs font-semibold text-[var(--text)] truncate leading-tight">
+                    <p className="text-xs font-semibold text-(--text) truncate leading-tight">
                         {currentUser.name}
                     </p>
-                    <p className="text-[10px] text-[var(--muted)] truncate leading-tight">
+                    <p className="text-[10px] text-(--muted) truncate leading-tight">
                         {currentUser.email}
                     </p>
                 </div>
@@ -155,20 +155,20 @@ const MobileNav: React.FC<MobileNavProps> = ({ isOpen, onClose }) => {
                 role="navigation"
                 aria-label="Mobile navigation"
                 className={`md:hidden fixed top-0 right-0 h-full z-50 w-[280px] max-w-[85vw] flex flex-col
-                    bg-[var(--surface)] border-l border-[var(--border-hi)]
+                    bg-[var(--surface)] border-l border-(--border-hi)
                     shadow-2xl shadow-black/50
                     transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]
                     ${isOpen ? "translate-x-0" : "translate-x-full"}`}
             >
                 {/* Drawer Header */}
                 <div className="flex items-center justify-between px-5 py-4 border-b border-[var(--border)]">
-                    <span className="text-sm font-bold text-[var(--muted)] uppercase tracking-widest font-mono">
+                    <span className="text-sm font-bold text-(--muted) uppercase tracking-widest font-mono">
                         Navigation
                     </span>
                     <button
                         onClick={onClose}
                         aria-label="Close navigation"
-                        className="flex items-center justify-center w-9 h-9 rounded-lg text-[var(--muted)] hover:text-white hover:bg-white/10 transition-all"
+                        className="flex items-center justify-center w-9 h-9 rounded-lg text-(--muted) hover:text-white hover:bg-white/10 transition-all"
                     >
                         <X className="w-4 h-4" />
                     </button>
@@ -176,7 +176,7 @@ const MobileNav: React.FC<MobileNavProps> = ({ isOpen, onClose }) => {
 
                 {/* Drawer Body */}
                 <div className="flex flex-col gap-1 p-4 flex-1 overflow-y-auto">
-                    <p className="text-[10px] uppercase tracking-widest text-[var(--muted)] font-mono px-3 mb-1">
+                    <p className="text-[10px] uppercase tracking-widest text-(--muted) font-mono px-3 mb-1">
                         App
                     </p>
                     <NavItem
@@ -206,7 +206,7 @@ const MobileNav: React.FC<MobileNavProps> = ({ isOpen, onClose }) => {
 
                     <div className="h-px bg-[var(--border)] my-3" />
 
-                    <p className="text-[10px] uppercase tracking-widest text-[var(--muted)] font-mono px-3 mb-1">
+                    <p className="text-[10px] uppercase tracking-widest text-(--muted) font-mono px-3 mb-1">
                         Developer
                     </p>
                     <NavItem
@@ -236,10 +236,10 @@ const MobileNav: React.FC<MobileNavProps> = ({ isOpen, onClose }) => {
                             size="md"
                         />
                         <div className="flex-1 min-w-0">
-                            <p className="text-sm font-semibold text-[var(--text)] truncate leading-tight">
+                            <p className="text-sm font-semibold text-(--text) truncate leading-tight">
                                 {currentUser.name}
                             </p>
-                            <p className="text-xs text-[var(--muted)] truncate leading-tight">
+                            <p className="text-xs text-(--muted) truncate leading-tight">
                                 {currentUser.email}
                             </p>
                         </div>
@@ -272,5 +272,7 @@ export function useMobileNav() {
 // ── Default export: thin wrapper that wires everything ──────────────
 const AppNav: React.FC = () => null; // kept for compatibility; layout now uses sub-exports
 
+
 export { DesktopNav, MobileNav };
 export default AppNav;
+
