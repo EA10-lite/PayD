@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
-import { Code, User, Wallet, FileText, Globe, X, Menu } from "lucide-react";
+import { Code, User, Wallet, FileText, Globe, X, Menu, Activity } from "lucide-react";
 import { Avatar } from "./Avatar";
 import ConnectAccount from "./ConnectAccount";
 
@@ -81,6 +81,11 @@ const DesktopNav: React.FC = () => {
                 icon={<Code className="w-4 h-4" />}
                 label="debugger"
                 isDebug
+            />
+            <NavItem
+                to="/transactions"
+                icon={<Activity className="w-4 h-4" />}
+                label="History"
             />
 
             <Link
@@ -201,6 +206,12 @@ const MobileNav: React.FC<MobileNavProps> = ({ isOpen, onClose }) => {
                         to="/cross-asset-payment"
                         icon={<Globe className="w-4 h-4" />}
                         label="Cross-Asset"
+                        onClick={onClose}
+                    />
+                    <NavItem
+                        to="/transactions"
+                        icon={<Activity className="w-4 h-4" />}
+                        label="History"
                         onClick={onClose}
                     />
 
