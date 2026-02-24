@@ -32,8 +32,12 @@ export const EmployeeList: React.FC<EmployeeListProps> = ({
   const [csvData, setCsvData] = useState<Employee[]>([]);
   const [showCSVUploader, setShowCSVUploader] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
-  const [showEditModal, setShowEditModal] = useState<{ open: boolean; employee?: Employee }>({ open: false });
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState<{ open: boolean; id?: string }>({ open: false });
+  const [showEditModal, setShowEditModal] = useState<{ open: boolean; employee?: Employee }>({
+    open: false,
+  });
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState<{ open: boolean; id?: string }>({
+    open: false,
+  });
   const [sortKey, setSortKey] = useState<keyof Employee>('name');
   const [sortAsc, setSortAsc] = useState(true);
 
@@ -182,10 +186,7 @@ export const EmployeeList: React.FC<EmployeeListProps> = ({
             </tr>
           ) : (
             sortedEmployees.map((employee) => (
-              <tr
-                key={employee.id}
-                className="cursor-pointer transition"
-              >
+              <tr key={employee.id} className="cursor-pointer transition">
                 <td className="p-6">
                   <div className="flex items-center gap-3">
                     <Avatar
@@ -214,19 +215,21 @@ export const EmployeeList: React.FC<EmployeeListProps> = ({
                       {employee.salary ?? 0}
                     </button>
                   ) : (
-                    employee.salary ?? 0
+                    (employee.salary ?? 0)
                   )}
                 </td>
                 <td className="p-6">
                   <span
-                    className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider border ${employee.status === 'Active'
+                    className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider border ${
+                      employee.status === 'Active'
                         ? 'bg-green-100 text-green-600 border-green-200'
                         : 'bg-red-100 text-red-600 border-red-200'
-                      }`}
+                    }`}
                   >
                     <div
-                      className={`w-1 h-1 rounded-full ${employee.status === 'Active' ? 'bg-green-600' : 'bg-red-600'
-                        }`}
+                      className={`w-1 h-1 rounded-full ${
+                        employee.status === 'Active' ? 'bg-green-600' : 'bg-red-600'
+                      }`}
                     />
                     {employee.status || '-'}
                   </span>
@@ -293,7 +296,7 @@ export const EmployeeList: React.FC<EmployeeListProps> = ({
           </div>
         )}
       </div>
-      
+
       {/* Add Modal */}
       {showAddModal && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 z-50">
@@ -303,40 +306,42 @@ export const EmployeeList: React.FC<EmployeeListProps> = ({
               type="text"
               placeholder="Name"
               value={newEmployee.name}
-              onChange={e => setNewEmployee({ ...newEmployee, name: e.target.value })}
+              onChange={(e) => setNewEmployee({ ...newEmployee, name: e.target.value })}
               className="w-full mb-2 px-3 py-2 border rounded"
             />
             <input
               type="email"
               placeholder="Email"
               value={newEmployee.email}
-              onChange={e => setNewEmployee({ ...newEmployee, email: e.target.value })}
+              onChange={(e) => setNewEmployee({ ...newEmployee, email: e.target.value })}
               className="w-full mb-2 px-3 py-2 border rounded"
             />
             <input
               type="text"
               placeholder="Wallet"
               value={newEmployee.wallet}
-              onChange={e => setNewEmployee({ ...newEmployee, wallet: e.target.value })}
+              onChange={(e) => setNewEmployee({ ...newEmployee, wallet: e.target.value })}
               className="w-full mb-2 px-3 py-2 border rounded"
             />
             <input
               type="text"
               placeholder="Position"
               value={newEmployee.position}
-              onChange={e => setNewEmployee({ ...newEmployee, position: e.target.value })}
+              onChange={(e) => setNewEmployee({ ...newEmployee, position: e.target.value })}
               className="w-full mb-2 px-3 py-2 border rounded"
             />
             <input
               type="number"
               placeholder="Salary"
               value={newEmployee.salary}
-              onChange={e => setNewEmployee({ ...newEmployee, salary: Number(e.target.value) })}
+              onChange={(e) => setNewEmployee({ ...newEmployee, salary: Number(e.target.value) })}
               className="w-full mb-2 px-3 py-2 border rounded"
             />
             <select
               value={newEmployee.status}
-              onChange={e => setNewEmployee({ ...newEmployee, status: e.target.value as 'Active' | 'Inactive' })}
+              onChange={(e) =>
+                setNewEmployee({ ...newEmployee, status: e.target.value as 'Active' | 'Inactive' })
+              }
               className="w-full mb-4 px-3 py-2 border rounded"
             >
               <option value="Active">Active</option>
@@ -371,7 +376,7 @@ export const EmployeeList: React.FC<EmployeeListProps> = ({
             <input
               type="number"
               value={editSalary}
-              onChange={e => setEditSalary(Number(e.target.value))}
+              onChange={(e) => setEditSalary(Number(e.target.value))}
               className="w-full mb-4 px-3 py-2 border rounded"
             />
             <div className="flex justify-end gap-2">
