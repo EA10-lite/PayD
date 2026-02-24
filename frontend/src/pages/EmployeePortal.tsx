@@ -58,8 +58,8 @@ function TypeBadge({ type }: { type: EmployeeTransaction["type"] }) {
 function LoadingSkeleton() {
     return (
         <div>
-            {[...Array(5)].map((_, i) => (
-                <div key={i} className={`${styles.skeleton} ${styles.skeletonRow}`} />
+            {['s1', 's2', 's3', 's4', 's5'].map((id) => (
+                <div key={id} className={`${styles.skeleton} ${styles.skeletonRow}`} />
             ))}
         </div>
     );

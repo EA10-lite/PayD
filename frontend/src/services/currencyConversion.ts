@@ -69,18 +69,20 @@ export async function fetchExchangeRates(): Promise<Record<string, number>> {
       throw new Error(`Exchange rate API error: ${response.status}`);
     }
 
-    const data = await response.json();
-    const usdcRates = data["usd-coin"] || {};
+    const data = (await response.json()) as {
+      "usd-coin"?: Record<string, number>;
+    };
+    const usdcRates = data["usd-coin"] ?? {};
 
     const rates: Record<string, number> = {
-      USD: usdcRates.usd || 1,
-      NGN: usdcRates.ngn || 1580,
-      EUR: usdcRates.eur || 0.92,
-      GBP: usdcRates.gbp || 0.79,
-      KES: usdcRates.kes || 129,
-      GHS: usdcRates.ghs || 16.5,
-      ZAR: usdcRates.zar || 18.2,
-      INR: usdcRates.inr || 83.5,
+      USD: usdcRates.usd ?? 1,
+      NGN: usdcRates.ngn ?? 1580,
+      EUR: usdcRates.eur ?? 0.92,
+      GBP: usdcRates.gbp ?? 0.79,
+      KES: usdcRates.kes ?? 129,
+      GHS: usdcRates.ghs ?? 16.5,
+      ZAR: usdcRates.zar ?? 18.2,
+      INR: usdcRates.inr ?? 83.5,
     };
 
     cachedRates = { rates, timestamp: Date.now() };
@@ -99,7 +101,6 @@ export async function fetchExchangeRates(): Promise<Record<string, number>> {
       ZAR: 18.2,
       INR: 83.5,
     };
-
     cachedRates = { rates: fallbackRates, timestamp: Date.now() };
     return fallbackRates;
   }
