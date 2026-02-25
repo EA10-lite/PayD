@@ -1,5 +1,8 @@
 import { Router } from 'express';
 import searchController from '../controllers/searchController';
+import  authenticateJWT  from '../middlewares/auth';
+import { isolateOrganization } from '../middlewares/rbac';
+import { requireTenantContext } from '../middleware/tenantContext';
 
 const router = Router();
 
@@ -17,6 +20,7 @@ const router = Router();
  */
 router.get(
   '/organizations/:organizationId/employees',
+  requireTenantContext,
   searchController.searchEmployees.bind(searchController)
 );
 
@@ -36,6 +40,7 @@ router.get(
  */
 router.get(
   '/organizations/:organizationId/transactions',
+  requireTenantContext,
   searchController.searchTransactions.bind(searchController)
 );
 

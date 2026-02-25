@@ -5,9 +5,9 @@ import { useTransactionSimulation } from '../hooks/useTransactionSimulation';
 import { TransactionSimulationPanel } from '../components/TransactionSimulationPanel';
 import { useNotification } from '../hooks/useNotification';
 import { useSocket } from '../hooks/useSocket';
-import { generateWallet } from '../services/stellar';
+import { createClaimableBalanceTransaction, generateWallet } from '../services/stellar';
 import { useTranslation } from 'react-i18next';
-import { Card } from '@stellar/design-system';
+import { Card, Heading, Text, Button, Input, Select } from '@stellar/design-system';
 import { SchedulingWizard } from '../components/SchedulingWizard';
 import { CountdownTimer } from '../components/CountdownTimer';
 
@@ -19,6 +19,17 @@ interface PayrollFormState {
   memo?: string;
 }
 
+const formatDate = (dateString: string) => {
+  if (!dateString) return 'N/A';
+  const date = new Date(dateString);
+  if (isNaN(date.getTime())) return dateString;
+  return date.toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  });
+};
+
 interface PendingClaim {
   id: string;
   employeeName: string;
@@ -27,6 +38,9 @@ interface PendingClaim {
   claimantPublicKey: string;
   status: string;
 }
+
+// Mock employer secret key for simulation purposes
+const MOCK_EMPLOYER_SECRET = 'SD3X5K7G7XV4K5V3M2G5QXH434M3VX6O5P3QVQO3L2PQSQQQQQQQQQQQ';
 
 const initialFormState: PayrollFormState = {
   employeeName: '',
@@ -132,7 +146,6 @@ export default function PayrollScheduler() {
 
   const handleInitialize = async (e: React.FormEvent) => {
     e.preventDefault();
-
     if (!formData.employeeName || !formData.amount) {
       notifyError('Missing required fields', 'Please provide employee name and amount.');
       return;
@@ -148,6 +161,20 @@ export default function PayrollScheduler() {
   const handleBroadcast = async () => {
     setIsBroadcasting(true);
     try {
+      const mockRecipientPublicKey = generateWallet().publicKey;
+
+      // Integrate claimable balance logic from Issue #44
+      const result = createClaimableBalanceTransaction(
+        MOCK_EMPLOYER_SECRET,
+        mockRecipientPublicKey,
+        String(formData.amount),
+        'USDC'
+      );
+
+      if (!result.success) {
+        throw new Error('Failed to create claimable balance');
+      }
+
       // Simulate a brief delay for network broadcast
       await new Promise((resolve) => setTimeout(resolve, 1500));
 
@@ -157,9 +184,10 @@ export default function PayrollScheduler() {
         employeeName: formData.employeeName,
         amount: formData.amount,
         dateScheduled: formData.startDate || new Date().toISOString().split('T')[0],
-        claimantPublicKey: generateWallet().publicKey,
+        claimantPublicKey: mockRecipientPublicKey,
         status: 'Pending Claim',
       };
+
       const updatedClaims = [...pendingClaims, newClaim];
       setPendingClaims(updatedClaims);
       localStorage.setItem('pending-claims', JSON.stringify(updatedClaims));
@@ -171,6 +199,26 @@ export default function PayrollScheduler() {
         'Broadcast successful!',
         `Claimable balance created for ${formData.employeeName}`
       );
+
+      // Trigger Webhook Event (Internal simulation)
+      try {
+        await fetch('http://localhost:3001/api/webhooks/test-trigger', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            event: 'payment.completed',
+            payload: {
+              id: newClaim.id,
+              employeeName: newClaim.employeeName,
+              amount: newClaim.amount,
+              status: 'created',
+            },
+          }),
+        });
+      } catch {
+        console.warn('Webhook test-trigger skipped (Backend might not be running)');
+      }
+
       resetSimulation();
       setFormData(initialFormState);
     } catch (err) {
@@ -219,7 +267,6 @@ export default function PayrollScheduler() {
               <circle cx="12" cy="12" r="10" />
               <polyline points="12 6 12 12 16 14" />
             </svg>
-            Configure Automation
           </button>
         </div>
       </div>
@@ -353,7 +400,7 @@ export default function PayrollScheduler() {
 
               <div className="md:col-span-2 pt-4">
                 {!simulationPassed ? (
-                  <button
+                  <Button
                     type="submit"
                     disabled={isSimulating}
                     className="w-full py-4 bg-(--accent) text-bg font-black rounded-xl hover:scale-[1.01] transition-transform shadow-lg shadow-(--accent)/10 uppercase tracking-widest text-sm flex items-center justify-center gap-2"
@@ -361,9 +408,9 @@ export default function PayrollScheduler() {
                     {isSimulating
                       ? 'Simulating...'
                       : t('payroll.submit', 'Initialize and Validate')}
-                  </button>
+                  </Button>
                 ) : (
-                  <button
+                  <Button
                     type="button"
                     onClick={() => {
                       void handleBroadcast();
@@ -372,13 +419,12 @@ export default function PayrollScheduler() {
                     className="w-full py-4 bg-(--success) text-bg font-black rounded-xl hover:scale-[1.01] transition-transform shadow-lg shadow-(--success)/10 uppercase tracking-widest text-sm flex items-center justify-center gap-2"
                   >
                     {isBroadcasting ? 'Broadcasting...' : 'Confirm & Broadcast to Network'}
-                  </button>
+                  </Button>
                 )}
               </div>
             </form>
           </div>
 
-          {/* Simulation & Info Side Panel */}
           <div className="lg:col-span-2 flex flex-col gap-6">
             <TransactionSimulationPanel
               result={simulationResult}
@@ -420,7 +466,6 @@ export default function PayrollScheduler() {
         </div>
       )}
 
-      {/* Pending Claims Section */}
       <div className="w-full">
         <h2 className="text-xl font-bold mb-4">Pending Claims</h2>
         <Card>

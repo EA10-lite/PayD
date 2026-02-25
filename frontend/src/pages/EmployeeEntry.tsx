@@ -287,6 +287,7 @@ export default function EmployeeEntry() {
       <EmployeeList
         employees={mockEmployees}
         onEmployeeClick={(employee) => console.log('Clicked:', employee.name)}
+        onAddEmployee={(employee) => console.log('Added:', employee)}
       />
     </div>
   );
